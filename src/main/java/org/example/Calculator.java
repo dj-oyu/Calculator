@@ -32,54 +32,54 @@ public class Calculator {
     sealed interface Term permits Number, Op, Paren {
     }
 
-    record Number(int num, int denom) implements Term {
+    record Number(int numerator, int denominator) implements Term {
         Number(int n) {
             this(n, 1);
         }
 
-        Number(int num, int denom) {
-            assert (denom != 0);
+        Number(int numerator, int denominator) {
+            assert (denominator != 0);
 
-            if (denom < 0) {
-                num = -num;
-                denom = -denom;
+            if (denominator < 0) {
+                numerator = -numerator;
+                denominator = -denominator;
             }
-            if (num == 0) {
-                this.num = 0;
-                this.denom = denom;
+            if (numerator == 0) {
+                this.numerator = 0;
+                this.denominator = denominator;
             } else {
-                var g = gcd(num, denom);
-                this.num = num / g;
-                this.denom = denom / g;
+                var g = gcd(numerator, denominator);
+                this.numerator = numerator / g;
+                this.denominator = denominator / g;
             }
         }
 
         Number add(Number other) {
-            var g = gcd(this.denom, other.denom);
-            var num = this.num * other.denom / g + other.num * this.denom / g;
-            return new Number(num, this.denom * other.denom / g);
+            var g = gcd(this.denominator, other.denominator);
+            var num = this.numerator * other.denominator / g + other.numerator * this.denominator / g;
+            return new Number(num, this.denominator * other.denominator / g);
         }
 
         Number sub(Number other) {
-            var g = gcd(this.denom, other.denom);
-            var num = this.num * other.denom / g - other.num * this.denom / g;
-            return new Number(num, this.denom * other.denom / g);
+            var g = gcd(this.denominator, other.denominator);
+            var num = this.numerator * other.denominator / g - other.numerator * this.denominator / g;
+            return new Number(num, this.denominator * other.denominator / g);
         }
 
         Number mul(Number other) {
-            return new Number(this.num * other.num, this.denom * other.denom);
+            return new Number(this.numerator * other.numerator, this.denominator * other.denominator);
         }
 
         Number div(Number other) {
-            return new Number(this.num * other.denom, this.denom * other.num);
+            return new Number(this.numerator * other.denominator, this.denominator * other.numerator);
         }
 
         @Override
         public String toString() {
-            if (denom == 1) {
-                return String.format("%d", num);
+            if (denominator == 1) {
+                return String.format("%d", numerator);
             }
-            return String.format("%.8f", 1.0 * num / denom);
+            return String.format("%.8f", 1.0 * numerator / denominator);
         }
 
         int gcd(int a, int b) {
@@ -108,25 +108,25 @@ public class Calculator {
         System.out.println("こんにちは！電卓くんです！");
 
         try (var sc = new Scanner(System.in)) {
-            try {
-                while (true) {
-                    expressions = new ArrayList<>();
-                    read_idx = 0;
+            while (true) {
+                expressions = new ArrayList<>();
+                read_idx = 0;
 
-                    System.out.println(msg);
+                System.out.println(msg);
 
-                    String input = sc.nextLine();
-                    if (input.isEmpty())
-                        return;
+                String input = sc.nextLine();
+                if (input.isEmpty())
+                    return;
 
+                try {
                     parse(input);
-                    var ans = solve();
-                    System.out.printf("答え: %s\n", ans);
+                    System.out.printf("答え: %s\n", solve());
+
+                } catch (NumberFormatException ex) {
+                    System.out.println("不正な式が入力されました");
+                } catch (InvalidParameterException ex) {
+                    System.out.println(ex.getMessage());
                 }
-            } catch (NumberFormatException ex) {
-                System.out.println("不正な式が入力されました");
-            } catch (InvalidParameterException ex) {
-                System.out.println(ex.getMessage());
             }
         } catch (Exception ex) {
             ex.printStackTrace();
