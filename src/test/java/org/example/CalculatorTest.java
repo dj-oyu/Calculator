@@ -72,6 +72,14 @@ public class CalculatorTest {
         Calculator.parse("2 * (3 + 2)");
         result = Calculator.solve();
         assertEquals(new Number(10), result, "2 * (3 + 2) should equal 10");
+
+        Calculator.parse("(3 + 2) * (1 + 1)");
+        result = Calculator.solve();
+        assertEquals(new Number(10), result, "(3 + 2) * (1 + 1) should equal 10");
+
+        Calculator.parse("((3 + 2) * 3 + 1) * -1");
+        result = Calculator.solve();
+        assertEquals(new Number(-16), result, "((3 + 2) * 3 + 1) * -1 should equal -16");
     }
 
     @Test

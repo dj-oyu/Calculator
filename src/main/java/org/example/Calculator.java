@@ -220,8 +220,8 @@ public class Calculator {
         if (read_idx == expressions.size())
             return current;
         return switch (expressions.get(read_idx++)) {
-            case Op(OpSymbol op) when op == OpSymbol.ADD -> current.add(solve());
-            case Op(OpSymbol op) when op == OpSymbol.SUB -> current.sub(solve());
+            case Op(OpSymbol op) when op == OpSymbol.ADD -> current.add(calc_add_sub());
+            case Op(OpSymbol op) when op == OpSymbol.SUB -> current.sub(calc_add_sub());
             case Paren p when p.side == Parenthesis.RIGHT -> current;
             default -> {
                 read_idx--;
@@ -252,5 +252,4 @@ public class Calculator {
             case Op ignored -> throw new InvalidParameterException(invalid_expr_error);
         };
     }
-
 }
